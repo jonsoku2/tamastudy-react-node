@@ -12,34 +12,39 @@ const AuthModalPresenter = ({
   signupData,
   showPassword,
   onClickShowPassword,
+  isSignin,
+  onClickAuthButton,
 }) => {
   return (
     <Wrapper>
       {/*  Auth Button (Login  / Register)  */}
       <AuthButtonBox>
-        <AuthButton>
-          <span>LOGIN</span>
+        <AuthButton active={isSignin} onClick={() => onClickAuthButton('signin')}>
+          <span>SIGN IN</span>
         </AuthButton>
-        <AuthButton>
+        <AuthButton active={!isSignin} onClick={() => onClickAuthButton('signup')}>
           <span>SIGN UP</span>
         </AuthButton>
       </AuthButtonBox>
       {/* form */}
-      <Signin
-        onChange={onChange}
-        onSubmit={onSubmit}
-        formData={signinData}
-        showPassword={showPassword}
-        onClickShowPassword={onClickShowPassword}
-      />
+      {isSignin ? (
+        <Signin
+          onChange={onChange}
+          onSubmit={onSubmit}
+          formData={signinData}
+          showPassword={showPassword}
+          onClickShowPassword={onClickShowPassword}
+        />
+      ) : (
+        <Signup
+          onChange={onChange}
+          onSubmit={onSubmit}
+          formData={signupData}
+          showPassword={showPassword}
+          onClickShowPassword={onClickShowPassword}
+        />
+      )}
 
-      <Signup
-        onChange={onChange}
-        onSubmit={onSubmit}
-        formData={signupData}
-        showPassword={showPassword}
-        onClickShowPassword={onClickShowPassword}
-      />
       {/* google / facebook login */}
       <SnsWrapper>
         <FBLogin>
@@ -66,12 +71,11 @@ const AuthModalPresenter = ({
 export default AuthModalPresenter;
 
 const Wrapper = styled.div`
-  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.13);
   width: 100%;
-
+  margin-top: 64px;
   @media only screen and (min-width: 768px) {
     width: 50%;
-    margin: 0 auto;
+    margin: 64px auto 0;
   }
 `;
 
@@ -84,11 +88,10 @@ const AuthButton = styled.button`
   padding: 16px 0;
   cursor: pointer;
   outline: none;
-  background-color: #e2e2e2;
+  background-color: ${(props) => (props.active ? '#FFFFFF' : '#e2e2e2')};
   transition: background-color 100ms ease-in;
   font-weight: 900;
   color: #7f8c8d;
-  &:hover,
   &:active,
   &:focus {
     background-color: #ffffff;
