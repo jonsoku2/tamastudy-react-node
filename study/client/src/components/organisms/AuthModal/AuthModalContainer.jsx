@@ -4,7 +4,13 @@ import { useHistory } from 'react-router-dom';
 import AuthModalPresenter from './AuthModalPresenter';
 import { signinFn, signupFn } from '../../../store/actions/v1/auth.action';
 
-const initialState = {
+const initialStateForSignin = {
+  email: '',
+  password: '',
+};
+
+const initialStateForSignup = {
+  username: '',
   email: '',
   password: '',
 };
@@ -12,21 +18,33 @@ const initialState = {
 const AuthModalContainer = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const [formData, setFormData] = useState(initialState);
+  const [signinData, setSigninData] = useState(initialStateForSignin);
+  const [signupData, setSignupData] = useState(initialStateForSignup);
   const [showPassword, setShowPassword] = useState(false);
 
   // onChange
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const handleChange = (e, formName) => {
+    if (formName === 'signin') {
+      setSigninData({
+        ...signinData,
+        [e.target.name]: e.target.value,
+      });
+    } else if (formName === 'signup') {
+      setSignupData({
+        ...signupData,
+        [e.target.name]: e.target.value,
+      });
+    }
   };
 
   // onSubmit
-  const handleSubmit = (e) => {
+  const handleSubmit = (e, formName) => {
     e.preventDefault();
-    dispatch(signinFn(formData, history));
+    if (formName === 'signin') {
+      dispatch(signinFn(signinData, history));
+    } else if (formName === 'signup') {
+      dispatch(signupFn(signupData, history));
+    }
   };
 
   const onClickShowPassword = (e) => {
@@ -40,7 +58,8 @@ const AuthModalContainer = () => {
       <AuthModalPresenter
         onChange={handleChange}
         onSubmit={handleSubmit}
-        formData={formData}
+        signinData={signinData}
+        signupData={signupData}
         showPassword={showPassword}
         onClickShowPassword={onClickShowPassword}
       />

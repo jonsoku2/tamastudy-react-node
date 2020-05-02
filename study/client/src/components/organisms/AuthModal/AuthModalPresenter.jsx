@@ -8,7 +8,8 @@ import Signup from '../../molecules/AuthForm/Signup';
 const AuthModalPresenter = ({
   onChange,
   onSubmit,
-  formData,
+  signinData,
+  signupData,
   showPassword,
   onClickShowPassword,
 }) => {
@@ -27,7 +28,7 @@ const AuthModalPresenter = ({
       <Signin
         onChange={onChange}
         onSubmit={onSubmit}
-        formData={formData}
+        formData={signinData}
         showPassword={showPassword}
         onClickShowPassword={onClickShowPassword}
       />
@@ -35,7 +36,7 @@ const AuthModalPresenter = ({
       <Signup
         onChange={onChange}
         onSubmit={onSubmit}
-        formData={formData}
+        formData={signupData}
         showPassword={showPassword}
         onClickShowPassword={onClickShowPassword}
       />

@@ -28,20 +28,17 @@ export const FiledSet = styled.fieldset`
   }
 `;
 
-export const InputBox = styled.div``;
-export const InputEmailBox = styled(InputBox)`
+export const InputBox = styled.div`
   input {
     width: 100%;
   }
 `;
+
+export const InputUsernameBox = styled(InputBox)``;
+export const InputEmailBox = styled(InputBox)``;
 export const InputPasswordBox = styled(InputBox)`
   display: flex;
   justify-content: space-between;
-
-  input {
-    width: 100%;
-  }
-
   /* show Password button */
   button {
     outline: none;

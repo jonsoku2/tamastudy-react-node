@@ -11,13 +11,15 @@ import {
   LoginButton,
 } from './styled';
 
+const SIGN_IN = 'signin';
+
 const Signin = ({ onChange, onSubmit, formData, showPassword, onClickShowPassword }) => {
   return (
     <FormWrapper>
       <FormTitle>
         <p>이메일과 패스워드를 입력해주세요. </p>
       </FormTitle>
-      <Form onSubmit={onSubmit}>
+      <Form onSubmit={(e) => onSubmit(e, SIGN_IN)}>
         <FiledSet>
           <label htmlFor={'authEmail'}>Email *</label>
           <InputEmailBox>
@@ -27,7 +29,7 @@ const Signin = ({ onChange, onSubmit, formData, showPassword, onClickShowPasswor
               id={'authEmail'}
               name={'email'}
               value={formData.email}
-              onChange={onChange}
+              onChange={(e) => onChange(e, SIGN_IN)}
             />
           </InputEmailBox>
         </FiledSet>
@@ -40,7 +42,7 @@ const Signin = ({ onChange, onSubmit, formData, showPassword, onClickShowPasswor
               id={'authPassword'}
               name={'password'}
               value={formData.password}
-              onChange={onChange}
+              onChange={(e) => onChange(e, SIGN_IN)}
             />
             <button onClick={onClickShowPassword}>{showPassword ? 'Hide' : 'Show'}</button>
           </InputPasswordBox>

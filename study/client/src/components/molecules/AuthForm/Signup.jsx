@@ -4,6 +4,7 @@ import {
   FormTitle,
   Form,
   FiledSet,
+  InputUsernameBox,
   InputEmailBox,
   InputPasswordBox,
   FormButtonBox,
@@ -11,13 +12,28 @@ import {
   LoginButton,
 } from './styled';
 
+const SIGN_UP = 'signup';
+
 const Signup = ({ onChange, onSubmit, formData, showPassword, onClickShowPassword }) => {
   return (
     <FormWrapper>
       <FormTitle>
         <p>이메일과 패스워드를 입력해주세요. </p>
       </FormTitle>
-      <Form onSubmit={onSubmit}>
+      <Form onSubmit={(e) => onSubmit(e, SIGN_UP)}>
+        <FiledSet>
+          <label htmlFor={'authUsername'}>User name *</label>
+          <InputUsernameBox>
+            <input
+              placeholder={'Username을 입력해주세요. '}
+              type={'text'}
+              id={'authUsername'}
+              name={'username'}
+              value={formData.username}
+              onChange={(e) => onChange(e, SIGN_UP)}
+            />
+          </InputUsernameBox>
+        </FiledSet>
         <FiledSet>
           <label htmlFor={'authEmail'}>Email *</label>
           <InputEmailBox>
@@ -27,7 +43,7 @@ const Signup = ({ onChange, onSubmit, formData, showPassword, onClickShowPasswor
               id={'authEmail'}
               name={'email'}
               value={formData.email}
-              onChange={onChange}
+              onChange={(e) => onChange(e, SIGN_UP)}
             />
           </InputEmailBox>
         </FiledSet>
@@ -40,7 +56,7 @@ const Signup = ({ onChange, onSubmit, formData, showPassword, onClickShowPasswor
               id={'authPassword'}
               name={'password'}
               value={formData.password}
-              onChange={onChange}
+              onChange={(e) => onChange(e, SIGN_UP)}
             />
             <button onClick={onClickShowPassword}>{showPassword ? 'Hide' : 'Show'}</button>
           </InputPasswordBox>
@@ -49,7 +65,7 @@ const Signup = ({ onChange, onSubmit, formData, showPassword, onClickShowPasswor
           <ResetPasswordButton onClick={(e) => e.preventDefault()}>
             비밀번호를 잊어버리셨습니까?
           </ResetPasswordButton>
-          <LoginButton type={'submit'}>Log In</LoginButton>
+          <LoginButton type={'submit'}>Register</LoginButton>
         </FormButtonBox>
       </Form>
     </FormWrapper>
