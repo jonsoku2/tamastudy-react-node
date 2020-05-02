@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import Signin from '../../molecules/AuthForm/Signin';
+import Signup from '../../molecules/AuthForm/Signup';
 
 const AuthModalPresenter = ({
   onChange,
@@ -24,6 +25,14 @@ const AuthModalPresenter = ({
       </AuthButtonBox>
       {/* form */}
       <Signin
+        onChange={onChange}
+        onSubmit={onSubmit}
+        formData={formData}
+        showPassword={showPassword}
+        onClickShowPassword={onClickShowPassword}
+      />
+
+      <Signup
         onChange={onChange}
         onSubmit={onSubmit}
         formData={formData}
