@@ -4,6 +4,12 @@ export const FormWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  * {
+    button {
+      cursor: pointer;
+      outline: none;
+    }
+  }
 `;
 export const FormTitle = styled.div`
   padding: 24px 0;
@@ -44,7 +50,6 @@ export const InputPasswordBox = styled(InputBox)`
     outline: none;
     padding: 0 16px;
     border-left: 1px solid #eaeaea;
-    cursor: pointer;
   }
 `;
 
@@ -58,7 +63,6 @@ export const FormButton = styled.button`
 `;
 
 export const ResetPasswordButton = styled(FormButton)`
-  cursor: pointer;
   &:hover {
     font-weight: 900;
   }
@@ -68,5 +72,4 @@ export const LoginButton = styled(FormButton)`
   background-color: #4cb050;
   color: #ffffff;
   margin: 16px;
-  cursor: pointer;
 `;

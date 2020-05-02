@@ -18,14 +18,14 @@ const Signup = ({ onChange, onSubmit, formData, showPassword, onClickShowPasswor
   return (
     <FormWrapper>
       <FormTitle>
-        <p>이메일과 패스워드를 입력해주세요. </p>
+        <p>유저명, 이메일, 패스워드를 입력해주세요. </p>
       </FormTitle>
       <Form onSubmit={(e) => onSubmit(e, SIGN_UP)}>
         <FiledSet>
           <label htmlFor={'authUsername'}>User name *</label>
           <InputUsernameBox>
             <input
-              placeholder={'Username을 입력해주세요. '}
+              placeholder={'User name을 입력해주세요. '}
               type={'text'}
               id={'authUsername'}
               name={'username'}
@@ -63,7 +63,7 @@ const Signup = ({ onChange, onSubmit, formData, showPassword, onClickShowPasswor
         </FiledSet>
         <FormButtonBox>
           <ResetPasswordButton onClick={(e) => e.preventDefault()}>
-            비밀번호를 잊어버리셨습니까?
+            로그인 하시겠습니까 ?
           </ResetPasswordButton>
           <LoginButton type={'submit'}>Register</LoginButton>
         </FormButtonBox>
