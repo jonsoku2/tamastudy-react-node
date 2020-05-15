@@ -1,61 +1,141 @@
 const mongoose = require('mongoose');
-
+const slugify = require('slugify');
 const Schema = mongoose.Schema;
 
-const postSchema = new Schema({
-  title: {
-    type: String,
-    required: [true, '타이틀을 입력해주세요. '],
-    maxlength: [20, '20자 이내로 입력해주세요. '],
-    trim: true,
-  },
-  description: {
-    type: String,
-    required: [true, '본문을 입력해주세요. '],
-    maxlength: [1000, '1000자 이내로 입력해주세요. '],
-  },
-  imgUrl: {
-    type: String,
-    required: [true, '이미지주소를 입력해주세요.'],
-    maxlength: [1000, '정상적인 url을 입력해주세요. '],
-    trim: true,
-    validate: {
-      validator: function (v) {
-        const regex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-        return v == null || v.trim().length < 1000 || regex.test(v);
+const postSchema = new Schema(
+  {
+    title: {
+      type: String,
+      required: [true, '타이틀을 입력해주세요. '],
+      max: [20, '20자 이내로 입력해주세요. '],
+      trim: true,
+    },
+    description: {
+      type: String,
+      required: [true, '본문을 입력해주세요. '],
+      max: [1000, '1000자 이내로 입력해주세요. '],
+    },
+    images: [
+      {
+        type: String,
       },
-      message: 'validate 에러입니다. ',
+    ],
+    view: {
+      type: Number,
+      default: 0,
     },
-  },
-  view: {
-    type: Number,
-    default: 0,
-  },
-  user: {
-    type: mongoose.Types.ObjectId,
-    ref: 'User',
-  },
-  postComments: [
-    {
+    website: {
+      type: String,
+    },
+    phone: {
+      type: String,
+    },
+    slug: {
+      type: String,
+    },
+    location: {
+      address: {
+        type: String,
+      },
+      lng: {
+        type: Number,
+      },
+      lnt: {
+        type: Number,
+      },
+    },
+    averageRating: {
+      type: Number,
+      min: 0,
+      max: 5,
+    },
+    averageLunchCost: {
+      type: Number,
+      max: 9999999,
+    },
+    averageDinnerConst: {
+      type: Number,
+      max: 9999999,
+    },
+    user: {
       type: mongoose.Types.ObjectId,
-      ref: 'PostComment',
+      required: true,
+      ref: 'User',
     },
-  ],
-  createdAt: {
-    type: Date,
-    default: Date.now,
+    likes: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
+    comments: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'PostComment',
+      },
+    ],
   },
+  {
+    timestamps: true,
+  },
+);
+
+// image
+postSchema.pre('save', function (next) {
+  if (!this.isModified('images')) {
+    return next();
+  }
+  this.images = this.images.map((image) =>
+    image === '/images/post/noimage.jpg' ? null : '/images/post/noimage.jpg',
+  );
+  next();
 });
 
-postSchema.pre('remove', async function (next) {
+// slug
+postSchema.pre('save', function (next) {
+  if (!this.isModified('slug')) {
+    return next();
+  }
+  this.slug = slugify(this.title, { lower: true });
+  next();
+});
+
+// 포스트 작성 시, 유저 스키마에 objectId 추가
+postSchema.post('save', async function (next) {
   try {
-    await PostComment.deleteMany({
-      post: this._id,
-    });
-    console.log('[postSchema deleteMany 실행] \n >> post에 관련 된 postComment 전체 삭제');
-    next();
+    const User = require('./user.model');
+    const user = await User.findById({ _id: this.user });
+    user.posts = [...user.posts, this._id];
+    await user.save();
   } catch (error) {
-    next(error);
+    throw new Error(error);
   }
 });
-module.exports = mongoose.model('Post', postSchema);
+
+// 포스트 삭제 시, 유저 스키마에 objectId 제거
+postSchema.post('remove', async function (next) {
+  try {
+    const User = require('./user.model');
+    const user = await User.findById({ _id: this.user });
+    user.posts = user.posts.filter((post) => post.toString() !== this.user);
+    await user.save();
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
+// cascade post <-> postComment
+postSchema.pre('remove', async function (next) {
+  try {
+    console.log(`${this._id}번 포스트와 연관 된 댓글을 지우는 중입니다 ... `);
+    const PostComment = require('./postComment.model');
+    await PostComment.remove({ post: this._id }).exec();
+    next();
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
+const Post = mongoose.model('Post', postSchema);
+
+module.exports = Post;
