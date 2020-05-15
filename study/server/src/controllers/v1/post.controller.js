@@ -7,7 +7,7 @@ const User = require('../../database//models/User');
 // getPosts
 // postman uri ex
 // http://localhost:4000/v1/post
-exports.getPosts = asyncHandler(async (req, res, next) => {
+exports.getPosts = asyncHandler((req, res, next) => {
   res.status(200).json(res.advancedGetResult);
 });
 
