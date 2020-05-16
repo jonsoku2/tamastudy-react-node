@@ -47,15 +47,4 @@ const postSchema = new Schema({
   },
 });
 
-postSchema.pre('remove', async function (next) {
-  try {
-    await PostComment.deleteMany({
-      post: this._id,
-    });
-    console.log('[postSchema deleteMany 실행] \n >> post에 관련 된 postComment 전체 삭제');
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
 module.exports = mongoose.model('Post', postSchema);
