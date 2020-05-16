@@ -48,6 +48,19 @@ const userSchema = new Schema(
   },
 );
 
+userSchema.pre('save', function (next) {
+  console.log('*** <pre> identicon ***');
+  const data = new Identicon(this.email, {
+    foreground: [0, 0, 0, 255],
+    background: [255, 255, 255, 255],
+    margin: 0.2,
+    size: 32,
+    format: 'svg',
+  }).toString();
+  this.avatar = `data:image/svg+xml;base64,${data}`;
+  next();
+});
+
 userSchema.pre('save', async function (next) {
   try {
     if (!this.isModified('password')) {

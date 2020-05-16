@@ -1,5 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const cors = require('cors');
 require('dotenv').config({ path: '../.env' });
 require('colors');
 
@@ -14,6 +16,8 @@ const app = express();
 
 // 미들웨어
 app.use(sample);
+app.use(cors());
+app.use(bodyParser.json());
 
 // 라우트
 app.use('/', routes);
@@ -28,11 +32,15 @@ app.listen(PORT, () => {
   // 데이터베이스 실행
   const MONGO_URI = process.env.MONGO_URI || '';
   mongoose
-    .connect(MONGO_URI, { useUnifiedTopology: true, useNewUrlParser: true }, (err) => {
-      if (err) {
-        console.log(`${err}`.bgRed.white);
-      }
-    })
+    .connect(
+      MONGO_URI,
+      { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true },
+      (err) => {
+        if (err) {
+          console.log(`${err}`.bgRed.white);
+        }
+      },
+    )
     .then(() => {
       console.log(`몽고디비에 접속하였습니다.`.bgBlue.white);
     });
