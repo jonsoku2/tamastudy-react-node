@@ -5,7 +5,7 @@ const initialState = {
   password: '',
 };
 
-const Login = ({ loginFn }) => {
+const Login = () => {
   const [formData, setFormData] = useState(initialState);
 
   const handleChange = (e) => {
@@ -19,7 +19,6 @@ const Login = ({ loginFn }) => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      loginFn(formData);
     } catch (error) {
       console.log(error);
     }

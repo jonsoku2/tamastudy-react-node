@@ -6,7 +6,7 @@ const initialState = {
   password: '',
 };
 
-const Register = ({ registerFn }) => {
+const Register = () => {
   const [formData, setFormData] = useState(initialState);
 
   const handleChange = (e) => {
@@ -20,7 +20,6 @@ const Register = ({ registerFn }) => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      registerFn(formData);
     } catch (error) {
       console.log(error);
     }
