@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
+import { AuthContext } from '../hooks/useAuth';
 
 const initialState = {
   username: '',
@@ -7,6 +9,8 @@ const initialState = {
 };
 
 const Register = () => {
+  const history = useHistory();
+  const { registerFn } = useContext(AuthContext);
   const [formData, setFormData] = useState(initialState);
 
   const handleChange = (e) => {
@@ -20,6 +24,8 @@ const Register = () => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
+      await registerFn(formData);
+      history.push('/');
     } catch (error) {
       console.log(error);
     }

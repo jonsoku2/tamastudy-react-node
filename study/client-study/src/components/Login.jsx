@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
+import { AuthContext } from '../hooks/useAuth';
 
 const initialState = {
   email: '',
@@ -6,6 +8,8 @@ const initialState = {
 };
 
 const Login = () => {
+  const history = useHistory();
+  const { loginFn } = useContext(AuthContext);
   const [formData, setFormData] = useState(initialState);
 
   const handleChange = (e) => {
@@ -19,6 +23,8 @@ const Login = () => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
+      await loginFn(formData);
+      history.push('/');
     } catch (error) {
       console.log(error);
     }

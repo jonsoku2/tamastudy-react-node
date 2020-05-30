@@ -13,10 +13,10 @@ module.exports = (req, res, next) => {
       next();
     } catch (error) {
       req.user = undefined;
-      throw new Error('정상적인 토큰을 입력해주세요. ' + error.message);
+      throw new Error('auth-error');
     }
   } else {
     req.user = undefined;
-    throw new Error('토큰을 입력해주세요. ');
+    throw new Error('auth-error');
   }
 };

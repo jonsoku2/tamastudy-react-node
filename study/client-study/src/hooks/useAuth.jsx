@@ -1,31 +1,22 @@
-import { useState, useCallback } from 'react';
-import axios from 'axios';
+import React, { useCallback, useReducer } from 'react';
+import API from '../utils/API';
 
-export default () => {
-  const [token, setToken] = useState('');
-  const [userData, setUserData] = useState(null);
+import { authReducer, initialState, types } from '../reducers/authReducer';
+
+export const useAuth = () => {
+  const [state, dispatch] = useReducer(authReducer, initialState);
 
   const fetchMe = useCallback(async () => {
-    try {
-      const config = {
-        headers: {
-          authorization: `Bearer ${window.sessionStorage.getItem('token')}`,
-        },
-      };
-      const res = await axios.get('http://localhost:5001/user/me', config);
-      const user = res.data;
-      setUserData(user);
-    } catch (error) {
-      console.log(error);
-    }
+    const res = await API.get('user/me');
+    const user = res.data;
+    dispatch({ type: types.FETCH_ME, payload: user });
   }, []);
 
   const loginFn = async (formData) => {
     try {
-      const res = await axios.post('http://localhost:5001/user/login', formData);
+      const res = await API.post('user/login', formData);
       const token = res.data;
-      setToken(token);
-      window.sessionStorage.setItem('token', token);
+      dispatch({ type: types.LOGIN, payload: token });
     } catch (error) {
       console.log(error);
     }
@@ -33,10 +24,9 @@ export default () => {
 
   const registerFn = async (formData) => {
     try {
-      const res = await axios.post('http://localhost:5001/user/login', formData);
+      const res = await API.post('user/register', formData);
       const token = res.data;
-      window.sessionStorage.setItem('token', token);
-      setToken(token);
+      dispatch({ type: types.REGISTER, payload: token });
     } catch (error) {
       console.log(error);
     }
@@ -44,23 +34,27 @@ export default () => {
 
   const logoutFn = useCallback(
     (history) => {
-      if (token) {
-        setToken(null);
-        setUserData(null);
-        window.sessionStorage.removeItem('token');
+      if (state.token || window.sessionStorage.getItem('token')) {
+        dispatch({ type: types.LOGOUT });
         history.push('/');
       }
     },
-    [token],
+    [state.token],
   );
 
   return {
-    userData: userData,
-    isAuthenticated: !!userData,
+    userData: state.userData,
+    isAuthenticated: !!state.userData,
     fetchMe,
     loginFn,
     registerFn,
     logoutFn,
-    token,
+    token: state.token,
   };
+};
+
+export const AuthContext = React.createContext();
+
+export const AuthProvider = ({ children }) => {
+  return <AuthContext.Provider value={useAuth()}>{children}</AuthContext.Provider>;
 };

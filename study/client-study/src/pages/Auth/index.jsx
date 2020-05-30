@@ -1,16 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { Redirect } from 'react-router-dom';
 import Login from '../../components/Login';
 import Register from '../../components/Register';
+import { AuthContext } from '../../hooks/useAuth';
 
 const Auth = () => {
+  const { isAuthenticated } = useContext(AuthContext);
+
   const [status, setStatus] = useState('login');
   const handleStatus = (pageName) => {
     setStatus(pageName);
   };
 
-  //   if (isAuthenticated) {
-  //     return <Redirect to={'/posts'} />;
-  //   }
+  if (isAuthenticated) {
+    return <Redirect to={'/posts'} />;
+  }
 
   return (
     <div>

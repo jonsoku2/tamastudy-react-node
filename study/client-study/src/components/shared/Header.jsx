@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { AuthContext } from '../../hooks/useAuth';
+import { useHistory } from 'react-router-dom';
 
 const Header = () => {
+  const history = useHistory();
+  const { isAuthenticated, userData, logoutFn } = useContext(AuthContext);
+
   return (
     <div>
-      {true && (
+      {isAuthenticated && (
         <>
-          <img src={'user.avatar'} alt="" />
-          <span>{'user.email'}</span>
-          <button onClick={() => console.log('logout')}>Logout</button>
+          <img src={userData.avatar} alt="" />
+          <span>{userData.email}</span>
+          <button onClick={() => logoutFn(history)}>Logout</button>
         </>
       )}
     </div>
