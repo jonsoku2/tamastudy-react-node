@@ -1,11 +1,9 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 
 const Header = () => {
-  const history = useHistory();
   return (
     <div>
-      {user && (
+      {true && (
         <>
           <img src={'user.avatar'} alt="" />
           <span>{'user.email'}</span>
