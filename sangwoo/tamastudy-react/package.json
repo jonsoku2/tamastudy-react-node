@@ -24,7 +24,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "react-transition-group": "^4.3.0",
-    "swiper": "^5.3.6",
+    "swiper": "^6.5.1",
     "uuid": "^7.0.2"
   },
   "scripts": {
